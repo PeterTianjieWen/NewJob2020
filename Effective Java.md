@@ -126,4 +126,23 @@
   static int numElementsInCommon(Set<?> set1, Set<?> set2) { ... }
   ```
 
-  
+* Exception to use raw types: 
+
+  * use raw types in class literals, i.e. `List.class`, `String[].class`
+
+  * `instance of` operator
+
+    ```java
+    if (o instanceof Set){
+      Set<?> s = (Set<?>) o;
+      ...
+    }
+    ```
+
+* Summary:
+
+  * **Safe**`Set<Object>` is a parameterized type representing a set that can contain objects of any type
+  * **Safe**`Set<?>` is a wildcard type representing a set that contain only objects of some unknown type
+  * `Set` is a raw type
+
+****
