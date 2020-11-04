@@ -145,4 +145,27 @@
   * **Safe**`Set<?>` is a wildcard type representing a set that contain only objects of some unknown type
   * `Set` is a raw type
 
-****
+27. **Eliminate unchecked warnings**
+
+    * unchekcked cast warnings, unchekced method invocation warnings, unchecked parameterized vararg type warnings, unchecked conversion warnings
+
+      ```java
+      //The compiler will infer the correct actual type parameter
+      //with the diamond operator <> (i.e. Lark)
+      Set<Lark> exaltation = new HashSet<>();
+      ```
+
+    * **Make sure the code is typesafe**
+
+      * Eliminate every unchekced warning that you can
+      * If you cannot eliminate a warning, but you can **prove that the code that provoked the warning is typesafe,** then (and only then) suppress the warning with an `@SuppressWarnings("unchekced")` annotation.
+        * If you suppress without proving that the code is typesafe, you are giving yourself a false sense of security
+        * If not suppress the warnings that you know to be safe (instead of suppressing them), you won't notice when a new warning crops up that represents a real problem.
+      * Always use the `SuppressWarnings` annotation on the smallest scope possible (Never use on an entire class). Add a comment to justify the annotation.
+
+28. **Prefer lists to arrays**
+    * **Arrays** are covariant: if `Sub` is a subtype of `Super`, `Sub[]` is a subtype of `Super[]`. 
+      * *Reified*: know and enforce element type at runtime
+    * **Lists** are invariant: `List<Sub>` and `List<Super>` are two distinct types
+      * *Erasure*: enforce type constraints only at compile time and discard (or *erase*) their element type information at runtime.
+
