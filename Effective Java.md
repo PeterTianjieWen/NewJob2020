@@ -189,8 +189,33 @@
 
 28. **Prefer lists to arrays**
     * **Arrays** are covariant: if `Sub` is a subtype of `Super`, `Sub[]` is a subtype of `Super[]`. 
-      * *Reified*: know and enforce element type at runtime
+      * ***Reified***: know and enforce element type at runtime
     * **Lists** are invariant: `List<Sub>` and `List<Super>` are two distinct types
-      * *Erasure*: enforce type constraints only at compile time and discard (or *erase*) their element type information at runtime.
+      * ***Erasure*:** enforce type constraints only at compile time and discard (or *erase*) their element type information at runtime.
       * Erasure allowed generic types to interoperate freely with legacy code that didn't use generics, ensuring a smooth transition to generics in Java 5.
+    * Types such as `E`, `List<E>` and `List<String>` are technically known as *non-reifiable* types whose runtime representation contains less information than its compile-time representation.
+    * The only parameterized types that are reifiable are unbounded wildcard types such as `List<?>` and `Map<?,?>`.
+    
+29. **Favor generic types**
+
+    * Workaround of a non-reifiable type array
+
+      * Create an array of `Object` and cast it to the generic array type.
+        * Cause *heap pollution*: the runtime type of the array does not match its compile-time types 
+      * Change the type of the field elements from `E[]` to `Object[]`
+      * Unchecked cast must not compromise the type safety of the program
+
+    * Advantages: more readable, more concise
+
+    * Java does not support lists natively, so some generic types **must** be implemented atop arrays.
+
+    * Generic types such as `HashMap` are implemented atop arrays for performance.
+
+    * Generic types that restrict the permissible values of their type parameters
+
+      ```java
+      class DelayQueue<E extends Delayed> implements BlockingQueue<E>
+      ```
+
+    * **Bounded type parameter**: `<E extends Delayed>` requires that the actual type parameter `E` be a subtype of `java.util.concurrent.Delayed` 
 
