@@ -1,4 +1,30 @@
-22. Use interfaces only to define types
+## CH1
+
+* Support types in Java:
+
+  * *Reference types*: interfaces, classes, arrays
+    * Class signature doesn't include the method's return type
+  * primitives
+
+* **Static factory methods** > Constructors
+
+  * methods have names
+  * not required to create a new object each time they're invoked
+  * can return an object of any subtype of their return type
+    * By convention, static factory methods for an interface named *Type* were put in a *noninstantiable companion class* name *Types* (Collection vs Collections)
+  * Naming convention for static factory p9
+
+* **Consider a builder when faced with many constructor parameters**
+
+  * Telescoping constructor pattern: hard to write client code, hard to read
+
+  * JavaBeans pattern: allow inconsistency (not thread-safe), mandate mutability
+
+  * **Builder pattern**: use builder object to set all parameters, then use a `build` method to generate the object
+
+    
+
+22. **Use interfaces only to define types**
 
     * Pitfall of *constant interface* : if a non-final class implements a constant interface, all of its subclasses will have their namespaces polluted by the constatnts in the interfaces
 
@@ -95,8 +121,6 @@
 
 ## Ch 5
 
-
-
 26. **Don't use raw types**
 
 * Definition: 
@@ -147,7 +171,7 @@
 
 27. **Eliminate unchecked warnings**
 
-    * unchekcked cast warnings, unchekced method invocation warnings, unchecked parameterized vararg type warnings, unchecked conversion warnings
+    * unchecked cast warnings, unchecked method invocation warnings, unchecked parameterized vararg type warnings, unchecked conversion warnings
 
       ```java
       //The compiler will infer the correct actual type parameter
@@ -157,7 +181,7 @@
 
     * **Make sure the code is typesafe**
 
-      * Eliminate every unchekced warning that you can
+      * Eliminate every unchecked warning that you can
       * If you cannot eliminate a warning, but you can **prove that the code that provoked the warning is typesafe,** then (and only then) suppress the warning with an `@SuppressWarnings("unchekced")` annotation.
         * If you suppress without proving that the code is typesafe, you are giving yourself a false sense of security
         * If not suppress the warnings that you know to be safe (instead of suppressing them), you won't notice when a new warning crops up that represents a real problem.
@@ -168,4 +192,5 @@
       * *Reified*: know and enforce element type at runtime
     * **Lists** are invariant: `List<Sub>` and `List<Super>` are two distinct types
       * *Erasure*: enforce type constraints only at compile time and discard (or *erase*) their element type information at runtime.
+      * Erasure allowed generic types to interoperate freely with legacy code that didn't use generics, ensuring a smooth transition to generics in Java 5.
 
