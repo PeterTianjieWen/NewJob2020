@@ -164,8 +164,80 @@
       * Always use the `SuppressWarnings` annotation on the smallest scope possible (Never use on an entire class). Add a comment to justify the annotation.
 
 28. **Prefer lists to arrays**
+
     * **Arrays** are covariant: if `Sub` is a subtype of `Super`, `Sub[]` is a subtype of `Super[]`. 
       * *Reified*: know and enforce element type at runtime
     * **Lists** are invariant: `List<Sub>` and `List<Super>` are two distinct types
       * *Erasure*: enforce type constraints only at compile time and discard (or *erase*) their element type information at runtime.
+
+29. **Favor generic types**
+
+    * ```java
+      import java.util.*;
+      public class Stack<E> {
+          private E[] elements;
+          private int size = 0;
+          private static final int DEFAULT_INITIAL_CAPACITY = 16;
+      
+          public Stack(){
+              elements = new E[DEFAULT_INITIAL_CAPACITY];
+          }
+      
+          public void push(E e){
+              ensureCapacity();
+              elements[size++] = e;
+          }
+      
+          public E pop(){
+              if (size == 0){
+                  throw new EmptyStackException();
+              }
+              E result = elements[--size];
+              elements[size] = null;
+              return result;
+          }
+      
+          private void ensureCapacity(){
+              if(elements.length == size)
+                  elements = Arrays.copyOf(elements, 2 * size + 1);
+          }
+      
+      }
+      ```
+
+    * Won't compile because you can't create an array of a non-reifiable type
+
+      ```
+      Stack.java:8: error: generic array creation
+              elements = new E[DEFAULT_INITIAL_CAPACITY];
+                         ^
+      1 error
+      ```
+
+    * First solution directly circumvents the prohibition on generic array creation, create an array of `Object` and cast it to the gerneric array type.
+
+      ```
+      Stack.java:8: warning: [unchecked] unchecked cast
+              elements = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];
+                               ^
+        required: E[]
+        found:    Object[]
+        where E is a type-variable:
+          E extends Object declared in class Stack
+      1 warning
+      ```
+
+      You must be convinced that the unchecked cast will not compromise the type safety of the program
+
+      ```java
+      //The elements array will contain only E instances from push(E)
+      //This is sufficient to ensure type safety, but the runtime type
+      //of the array won't be E[]; it will always be Object[]
+      @SuppressWarnings("unchecked")
+      public Stack(){
+          elements = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];
+      }
+      ```
+
+    * The second solution is to change the type of the field elements from `E[]` to `Object[]`
 
